@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: flask-api
+  namespace: net-lab
+spec:
+  hosts:
+    - "myapp.local"
+  gateways:
+    - istio-system/istio-ingressgateway
+  http:
+    - match:
+        - uri:
+            prefix: /api
+      rewrite:
+        uri: "/"  # Strip /api and forward to Flask API
+      route:
+        - destination:
+            host: flask-api.net-lab.svc.cluster.local
+            port:
+              number: 5000

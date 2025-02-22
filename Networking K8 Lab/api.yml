@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-api
+  namespace: net-lab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-api
+  template:
+    metadata:
+      labels:
+        app: flask-api
+    spec:
+      containers:
+        - name: flask-api
+          image: tiangolo/uwsgi-nginx-flask:python3.8
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: UWSGI_SOCKET
+              value: "0.0.0.0:5000"
+            - name: UWSGI_PROTOCOL
+              value: "http"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-api
+  namespace: net-lab
+spec:
+  selector:
+    app: flask-api
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP

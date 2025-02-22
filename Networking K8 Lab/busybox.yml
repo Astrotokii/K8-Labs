@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: traffic-generator
+  namespace: net-lab
+spec:
+  template:
+    spec:
+      containers:
+      - name: curl
+        image: curlimages/curl
+        command: ["sh", "-c", "while true; do curl -H 'Host: myapp.local' http://istio-ingressgateway.istio-system.svc.cluster.local/api/; sleep 1; done"]
+      restartPolicy: Never
+  backoffLimit: 4
