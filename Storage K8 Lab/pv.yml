@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path   # PV is associated with the "local-path" StorageClass
+  persistentVolumeReclaimPolicy: Delete
+  hostPath:
+    path: /data/local-path-pv    # path on the Minikube VM for storage
+    type: DirectoryOrCreate

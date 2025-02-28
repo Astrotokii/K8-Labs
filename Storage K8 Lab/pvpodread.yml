@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-read-pod
+spec:
+  restartPolicy: OnFailure
+  containers:
+    - name: busybox
+      image: busybox:latest
+      command: ["sh", "-c", "cat /mnt/data/test.txt && echo '\\nFile still exists'"]
+      volumeMounts:
+        - name: storage
+          mountPath: /mnt/data
+  volumes:
+    - name: storage
+      persistentVolumeClaim:
+        claimName: local-pvc

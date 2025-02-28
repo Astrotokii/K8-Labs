@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-test-pod
+spec:
+  restartPolicy: OnFailure   # don't restart the container after it succeeds
+  containers:
+    - name: busybox
+      image: busybox:latest
+      command: ["sh", "-c", "echo 'Hello from PVC' > /mnt/data/test.txt"]
+      volumeMounts:
+        - name: storage
+          mountPath: /mnt/data
+  volumes:
+    - name: storage
+      persistentVolumeClaim:
+        claimName: local-pvc
